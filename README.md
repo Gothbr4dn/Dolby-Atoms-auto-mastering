@@ -37,10 +37,7 @@ dlb://input/your-favorite-podcast.mp4
 dlb://usr/home/me/voice-memo.wav
 You can think of this like an object key that is used to identify a file for your account. Once you call POST /media/input you'll be returned a new url in the response. This is a pre-signed URL to a cloud storage location you will use to upload the file. You do that by making a PUT request with your media.
 
-Python
-JavaScript
-cURL
-
+```
 import os
 import requests
 
@@ -63,13 +60,15 @@ response = requests.post(url, json=body, headers=headers)
 response.raise_for_status()
 data = response.json()
 presigned_url = data["url"]
+```
 
 # Upload your media to the pre-signed url response
-
+```
 print("Uploading {0} to {1}".format(file_path, presigned_url))
 with open(file_path, "rb") as input_file:
     requests.put(presigned_url, data=input_file)
 Once the upload is complete, you'll be able to refer to this media with the dlb://in/example.wav shortcut.
+```
 
 3. Make a Music Mastering request
 
@@ -78,11 +77,7 @@ The following examples include using a sample of your music file to preview 3 di
 After you start a music mastering request, you use the returned job_id to make job status requests. After a Successful job status is returned, you can download and review your music master preview audio file or music master audio file.
 
 3.1 Preview a section of your audio file using three different presets
-
-Python
-JavaScript
-cURL
-
+```
 import os
 import requests
 
@@ -117,16 +112,13 @@ headers = {
 response = requests.post(url, json=body, headers=headers)
 response.raise_for_status()
 print(response.json())
+```
 Check the job status of the previewed content
 
 You can learn more about this in the How It Works section of the Introduction.
 
 For this GET /media/master/preview request, use the job_id returned from the previous step. In these examples, it is specified as an environment variable that you'll need to set or replace in the code samples.
-
-Python
-JavaScript
-cURL
-
+```
 import os
 import requests
 
@@ -142,8 +134,9 @@ params = {"job_id": os.environ["DOLBYIO_JOB_ID"]}
 response = requests.get(url, params=params, headers=headers)
 response.raise_for_status()
 print(response.json())
+```
 While the job is still in progress, you will be able to see the status and progress values returned.
-
+```
 JSON
 
 {
@@ -151,8 +144,9 @@ JSON
   "status": "Running",
   "progress": 42
 }
+```
 If you re-run and call again after a period of time you'll see the status changes and the output you originally specified will be ready for download.
-
+```
 JSON
 
 {
@@ -161,14 +155,11 @@ JSON
   "result": {},
   "status": "Success"
 }
+```
 Download the completed previews
 
 When the Music Master previews are complete, the files will be PUT in the output location specified when the job was started. If you used the optional Dolby.io temporary storage, you will need to follow a couple steps to download your media. For more information, see the Dolby.io Media Temporary Cloud Storage guide.
-
-Python
-JavaScript
-cURL
-
+```
 import os
 import shutil
 import requests
@@ -192,12 +183,9 @@ with requests.get(url, params=args, headers=headers, stream=True) as response:
     print("Downloading from {0} into {1}".format(response.url, output_path))
     with open(output_path, "wb") as output_file:
         shutil.copyfileobj(response.raw, output_file)
+```
 3.2 Create a music master
-
-Python
-JavaScript
-cURL
-
+```
 import os
 import requests
 
@@ -222,16 +210,13 @@ headers = {
 response = requests.post(url, json=body, headers=headers)
 response.raise_for_status()
 print(response.json())
+```
 Check the job status of the music master
 
 You can learn more about this in the How It Works section of the Introduction.
 
 For this GET /media/master request, use the job_id returned from the previous step. In these examples, it is specified as an environment variable that you'll need to set or replace in the code samples.
-
-Python
-JavaScript
-cURL
-
+```
 import os
 import requests
 
@@ -247,8 +232,9 @@ params = {"job_id": os.environ["DOLBYIO_JOB_ID"]}
 response = requests.get(url, params=params, headers=headers)
 response.raise_for_status()
 print(response.json())
+```
 While the job is still in progress, you will be able to see the status and progress values returned.
-
+```
 JSON
 
 {
@@ -256,8 +242,9 @@ JSON
   "status": "Running",
   "progress": 42
 }
+```
 If you re-run and call again after a period of time you'll see the status changes and the output you originally specified will be ready for download.
-
+```
 JSON
 
 {
@@ -266,14 +253,11 @@ JSON
   "result": {},
   "status": "Success"
 }
+```
 Download the completed music master
 
 When the Music Master is complete, the file will be PUT in the output location specified when the job was started. If you used the optional Dolby.io temporary storage, you will need to follow a couple steps to download your media. For more information, see the Dolby.io Media Temporary Cloud Storage guide.
-
-Python
-JavaScript
-cURL
-
+```
 import os
 import shutil
 import requests
@@ -295,3 +279,4 @@ with requests.get(url, params=args, headers=headers, stream=True) as response:
     print("Downloading from {0} into {1}".format(response.url, output_path))
     with open(output_path, "wb") as output_file:
         shutil.copyfileobj(response.raw, output_file)
+ ```
